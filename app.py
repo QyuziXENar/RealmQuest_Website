@@ -17,18 +17,19 @@ class CustomHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
 def run():
+    # Render automatically provides the PORT environment variable
     port = int(os.environ.get("PORT", 8080))
-    host = "127.0.0.1"
     
-    # Explicitly serve from the script's root directory
+    # 0.0.0.0 is required for Render/cloud hosting
+    host = "0.0.0.0"
+    
     handler = partial(CustomHandler, directory=str(ROOT))
-    
-    # Allow immediate reuse of the port
     HTTPServer.allow_reuse_address = True
-    
     server = HTTPServer((host, port), handler)
+    
     print(f"\n=======================================================")
-    print(f" RealmQuest site running at: http://{host}:{port}/")
+    print(f" RealmQuest site running on port {port}")
+    print(f" Local URL: http://localhost:{port}/")
     print(f" Press Ctrl+C to stop.")
     print(f"=======================================================\n")
     
